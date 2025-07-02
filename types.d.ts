@@ -42,6 +42,7 @@ type FigureSearchDocument = {
 type QuestionSearchDocument = {
     type: "question";
 };
+
 // could todo:
 // - video descriptions/transcripts
 // - bits & ai based search result
