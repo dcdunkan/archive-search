@@ -1,0 +1,18 @@
+{
+  "version": "5",
+  "specifiers": {
+    "jsr:@hono/hono@*": "4.8.3",
+    "jsr:@hono/hono@4.8.3": "4.8.3",
+    "npm:minisearch@7.1.2": "7.1.2"
+  },
+  "jsr": {
+    "@hono/hono@4.8.3": {
+      "integrity": "f17509836610b97e9ec86bce5349387115c35ee72b7b29fd2b7944abe5f843ab"
+    }
+  },
+  "npm": {
+    "minisearch@7.1.2": {
+      "integrity": "sha512-R1Pd9eF+MD5JYDDSPAp/q1ougKglm14uEkPMvQ/05RGmx6G9wvmLTrTI/Q5iPNJLYqNdsDQ7qTGIcNWR+FrHmA=="
+    }
+  }
+}
