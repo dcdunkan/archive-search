@@ -2,5 +2,8 @@
     "fmt": {
         "indentWidth": 4,
         "lineWidth": 100
+    },
+    "tasks": {
+        "dev": "deno run -E --env-file=.env -N --watch main.ts"
     }
 }

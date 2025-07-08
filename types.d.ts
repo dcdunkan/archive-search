@@ -19,6 +19,11 @@ type ChapterSearchDocument = {
     title: string;
     chapterId: string;
     chapterNumber: number;
+    moduleName: string;
+    moduleNumber: number;
+    moduleSlug: string;
+    courseCode: string;
+    courseName: string;
 };
 type SectionSearchDocument = {
     type: "section";
@@ -26,6 +31,11 @@ type SectionSearchDocument = {
     sectionId: string;
     parent: string[];
     level: number;
+    moduleName: string;
+    moduleNumber: number;
+    moduleSlug: string;
+    courseCode: string;
+    courseName: string;
 };
 type TermSearchDocument = {
     type: "term";

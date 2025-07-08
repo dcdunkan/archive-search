@@ -14,7 +14,7 @@ if (!CONTENT_API_ROOT || !URL.canParse(CONTENT_API_ROOT)) {
 
 // deno-lint-ignore no-explicit-any
 async function getContentJSONFile<T extends any>(path: string) {
-    const response = await fetch(CONTENT_API_ROOT + "/" + path, {
+    const response = await fetch(CONTENT_API_ROOT + path, {
         cache: "no-cache",
         headers: {
             "Accept": "application/json",
@@ -35,8 +35,8 @@ const minisearch = new MiniSearch<SearchDocument>({
         "name",
         "code",
         "slug",
-        "courseName",
-        "courseCode",
+        // "courseName",
+        // "courseCode",
         "title",
         "caption",
         "alt",
@@ -70,7 +70,7 @@ const app = new Hono();
 
 // global search
 app.get("/search", (ctx) => {
-    const { query } = ctx.req.query();
+    const query = ctx.req.query("query");
     if (!query) {
         return ctx.json({
             ok: false,
