@@ -13,7 +13,6 @@ type ModuleSearchDocument = {
     courseCode: string;
     courseName: string;
 };
-// todo: full text search through the content (use smthing like remove-markdown?)
 type ChapterSearchDocument = {
     type: "chapter";
     title: string;
@@ -39,9 +38,7 @@ type SectionSearchDocument = {
 };
 type TermSearchDocument = {
     type: "term";
-}; // what about glossary??
-
-// todo:
+};
 type FigureSearchDocument = {
     type: "figure";
     figure_type: "image" | "diagram";
@@ -52,12 +49,6 @@ type FigureSearchDocument = {
 type QuestionSearchDocument = {
     type: "question";
 };
-
-// could todo:
-// - video descriptions/transcripts
-// - bits & ai based search result
-
-// todo: make this shared
 type SearchDocument =
     | CourseSearchDocument
     | ModuleSearchDocument
