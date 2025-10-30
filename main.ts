@@ -28,23 +28,16 @@ async function getContentJSONFile<T extends any>(path: string) {
 }
 
 const globalSearchIndex = await getContentJSONFile<SearchDocument[]>("/search-index.json")
-    .then((documents) => documents.map((doc, index) => ({ id: index, ...doc })));
+    .then((documents) => documents.reduce((p, doc) => ({ ...p, [doc.id]: doc }), {} as Record<string, SearchDocument>));
 
 const minisearch = new MiniSearch<SearchDocument>({
     fields: [
-        "name",
-        "code",
-        "slug",
-        // "courseName",
-        // "courseCode",
         "title",
-        "caption",
-        "alt",
+        "context.courseCode", // todo: modify these as new types are added
     ],
     searchOptions: {
         boost: {
-            code: 3,
-            name: 2,
+            "context.courseCode": 3,
             title: 2,
         },
         prefix: true,
@@ -52,7 +45,7 @@ const minisearch = new MiniSearch<SearchDocument>({
         combineWith: "AND",
     },
 });
-minisearch.addAll(globalSearchIndex);
+minisearch.addAll(Object.values(globalSearchIndex));
 
 // a simple lru based cache
 const cache = new Map<string, SearchDocument[]>();
@@ -70,6 +63,9 @@ const app = new Hono();
 
 // global search
 app.get("/search", (ctx) => {
+    // ctx.res.headers.set()
+    // ctx.header("Cache-Control", "public, max-age=3600"); // could have a higher limit
+
     const query = ctx.req.query("query");
     if (!query) {
         return ctx.json({
