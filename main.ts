@@ -1,5 +1,6 @@
 import MiniSearch from "npm:minisearch@7.1.2";
 import { Hono } from "jsr:@hono/hono@4.8.3";
+import { cors } from "jsr:@hono/hono@4.8.3/cors";
 
 // todo: implement API_SECRET somehow
 // const API_SECRET = Deno.env.get("API_SECRET");
@@ -28,7 +29,12 @@ async function getContentJSONFile<T extends any>(path: string) {
 }
 
 const globalSearchIndex = await getContentJSONFile<SearchDocument[]>("/search-index.json")
-    .then((documents) => documents.reduce((p, doc) => ({ ...p, [doc.id]: doc }), {} as Record<string, SearchDocument>));
+    .then((documents) =>
+        documents.reduce(
+            (p, doc) => ({ ...p, [doc.id]: doc }),
+            {} as Record<string, SearchDocument>,
+        )
+    );
 
 const minisearch = new MiniSearch<SearchDocument>({
     fields: [
@@ -58,20 +64,34 @@ const CACHE_ENTRY_LIMIT = 50;
 
 const app = new Hono();
 
+
+const FRONTEND_ORIGIN = Deno.env.get("FRONTEND_ORIGIN");
+if (FRONTEND_ORIGIN == null) {
+    throw new Error("invalid frontend origin")
+}
+app.use(cors({
+    origin: FRONTEND_ORIGIN.split(","),
+    allowMethods: ["GET"],
+    // allowHeaders: [],
+    // exposeHeaders: ["Cache-Control", "Content-Type"],
+    credentials: false,
+    maxAge: 600,
+}));
+
 // todo: could return paths to different search end-points (contextual stuff etc.)
 // app.get("/configurations")
 
 // global search
 app.get("/search", (ctx) => {
     // ctx.res.headers.set()
-    // ctx.header("Cache-Control", "public, max-age=3600"); // could have a higher limit
+    ctx.header("Cache-Control", "public, max-age=3600"); // could have a higher limit
 
     const query = ctx.req.query("query");
-    if (!query) {
+    if (typeof query !== "string" || query.trim().length == 0) {
         return ctx.json({
             ok: false,
-            message: "Expected query.",
-        }, { status: 400, statusText: "Expected query" });
+            message: "Invalid query string",
+        }, { status: 400, statusText: "Invalid query string" });
     }
 
     // todo: implement filters
