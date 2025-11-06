@@ -64,11 +64,12 @@ const CACHE_ENTRY_LIMIT = 50;
 
 const app = new Hono();
 
-
 const FRONTEND_ORIGIN = Deno.env.get("FRONTEND_ORIGIN");
 if (FRONTEND_ORIGIN == null) {
-    throw new Error("invalid frontend origin")
+    throw new Error("invalid frontend origin");
 }
+
+console.log("Origins:", FRONTEND_ORIGIN.split(","))
 app.use(cors({
     origin: FRONTEND_ORIGIN.split(","),
     allowMethods: ["GET"],
